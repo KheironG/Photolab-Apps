@@ -1,0 +1,43 @@
+#photolab-gallery-app {
+    @include flex-center-column;
+    grid-gap: 20px;
+}
+
+.photolab-gallery-app-one {
+    display: block;
+    text-align: left;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    padding: 30px 40px;
+
+    div {
+        @include flex-center-center;
+        grid-gap: 30px;
+
+        div {
+            @include flex-center-column;
+            @include border-radius;
+            @include box-shadow;
+            width: 300px;
+            max-width: 100%;
+            height: 300px;
+            cursor: pointer;
+            user-select: none;
+            color: grey;
+
+            h4 {
+                margin: 0;
+            }
+        }
+
+        div:hover {
+            color: lightblue;
+        }
+    }
+}
+
+div.title {
+    display: block;
+    text-align: right;
+}
