@@ -1,18 +1,20 @@
 import React from 'react';
 const Workshop = () => {
   return (
-      <div>
-              <h2>STUFF</h2>
-              <p>Mauris sem velit, vehicula eget sodales vitae,
-              rhoncus eget sapien:</p>
-              <ol>
-                <li>Nulla pulvinar diam</li>
-                <li>Facilisis bibendum</li>
-                <li>Vestibulum vulputate</li>
-                <li>Eget erat</li>
-                <li>Id porttitor</li>
-              </ol>
-            </div>
+      <div className="photolab-single-product">
+          <div className="single-product-images">
+              <img src="" alt=""></img>
+          </div>
+          <div className="single-product-info">
+              <h2></h2>
+              <div className="flex-start-center c-gap-20">
+
+                  <h4 className=""></h4>
+              </div>
+              <p></p>
+              <a href="#" className="select-product-button"> </a>
+          </div>
+      </div>
   );
 };
 export default Workshop;

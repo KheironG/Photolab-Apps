@@ -12,26 +12,29 @@ import "../../static/style.css";
 
 const App = () => {
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const productID = urlParams.get('image');
+
     const origin = window.location.origin;
+    const [ product , setProduct ] = useState();
 
-    const [products, setProducts] = useState();
-
-    const getApiData = async () => {
+    const getProduct = async () => {
         const response = await fetch(
-            `${origin}/wp-admin/admin-ajax.php?action=photolab_ajax&task=get&limit=2&category=34`
-        ).then((response) => response.text());
+            `${origin}/wp-json/photolabapp-auth/v1/photolabapp?id=${productID}`
+        ).then((response) => response.json());
           console.log(response);
-          setProducts(response);
     };
 
+
     useEffect(() => {
-        getApiData();
+        getProduct();
     }, []);
 
 
   return (
       <div className="app">
-            <p>test</p>
+            <Workshop/>
       </div>
   );
 };
