@@ -3457,16 +3457,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const App = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const productID = urlParams.get('image');
   const origin = window.location.origin;
-  const [product, setProduct] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
+  const [image, setImage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
 
-  const getProduct = async () => {
-    const response = await fetch(`${origin}/wp-json/photolabapp-auth/v1/photolabapp?id=${productID}`).then(response => response.json());
+  const getImage = async () => {
+    const response = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=image&id=${productID}`).then(response => response.json());
     console.log(response);
   };
 

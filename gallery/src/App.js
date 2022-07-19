@@ -1,5 +1,4 @@
 import { react, useState, useEffect } from '@wordpress/element';
-import { useLocation } from 'react-router-dom'
 
 import Upload from "./Upload";
 import Workshop from "./Workshop";
@@ -17,11 +16,11 @@ const App = () => {
     const productID = urlParams.get('image');
 
     const origin = window.location.origin;
-    const [ product , setProduct ] = useState();
+    const [ image , setImage ] = useState();
 
-    const getProduct = async () => {
+    const getImage = async () => {
         const response = await fetch(
-            `${origin}/wp-json/photolabapp-auth/v1/photolabapp?id=${productID}`
+            `${origin}/wp-json/photolab-app/v1/auth?task=image&id=${productID}`
         ).then((response) => response.json());
           console.log(response);
     };
