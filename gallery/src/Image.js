@@ -1,20 +1,21 @@
-import React from 'react';
-const Workshop = () => {
+import { react, useState, useEffect } from '@wordpress/element';
+
+const Image = () => {
+
+
   return (
       <div className="photolab-single-product">
           <div className="single-product-images">
-              <img src="" alt=""></img>
+              <img src={image.src}/>
           </div>
           <div className="single-product-info">
-              <h2></h2>
+              <h2>{image.name}</h2>
               <div className="flex-start-center c-gap-20">
-
                   <h4 className=""></h4>
               </div>
-              <p></p>
-              <a href="#" className="select-product-button"> </a>
+              <Frames origin={origin} dimensions={dimensions} />
           </div>
       </div>
   );
 };
-export default Workshop;
+export default Image;

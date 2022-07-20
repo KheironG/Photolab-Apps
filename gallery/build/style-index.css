@@ -1,12 +1,103 @@
 /*!***********************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!../static/style.css ***!
   \***********************************************************************************************************************************************************************/
+.bg-orange-300 {
+  background-color: #FF8A65;
+}
+
+.bg-orange-600 {
+  background-color: #F4511E;
+}
+
+.bg-orange-900 {
+  background-color: #BF360C;
+}
+
+.orange-300 {
+  color: #FF8A65;
+}
+
+.orange-600 {
+  color: #F4511E;
+}
+
+.orange-900 {
+  color: #BF360C;
+}
+
+.red {
+  color: red;
+}
+
+.bg-grey-1 {
+  background-color: #F6F6F8;
+}
+
+.bg-grey-2 {
+  background-color: #E3E3E3;
+}
+
 .box-shadow {
   box-shadow: rgba(0, 0, 0, .15) 0px 2px 8px;
 }
 
 .photolab-app-padding {
   padding: 40px;
+}
+
+form {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+label {
+  font-family: "spartan_medium";
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+select {
+  height: 35px;
+  padding: 5px 10px;
+  outline: none;
+  background: transparent;
+  border: none;
+  outline: 1px solid #E3E3E3;
+  font-family: "libre_regular";
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus {
+  outline: 1px solid #F4511E;
+}
+
+input[type=checkbox] {
+  width: 35px;
+}
+
+button.woocommerce-form-login__submit,
+button.woocommerce-form-register__submit {
+  width: 100%;
+  height: 35px;
+  font-family: "spartan_medium";
+  letter-spacing: 3px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: white;
+  background-color: #BF360C;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 #photolab-gallery-app {
@@ -57,6 +148,62 @@
 div.title {
   display: block;
   text-align: right;
+}
+
+.photolab-single-product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: start;
+  align-content: center;
+  width: 1300px;
+  max-width: 100%;
+  height: 80vh;
+  -moz-column-gap: 70px;
+       column-gap: 70px;
+  box-sizing: border-box;
+  padding: 70px 70px 70px 70px;
+  box-shadow: rgba(0, 0, 0, .15) 0px 2px 8px;
+}
+@media (max-width: 950px) {
+  .photolab-single-product {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 35px 35px 35px 35px;
+    -moz-column-gap: 35px;
+         column-gap: 35px;
+  }
+}
+.photolab-single-product .single-product-images {
+  grid-column: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+.photolab-single-product .single-product-images img {
+  width: 100%;
+  height: auto;
+}
+@media (max-width: 950px) {
+  .photolab-single-product .single-product-images {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+.photolab-single-product .single-product-info {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+@media (max-width: 950px) {
+  .photolab-single-product .single-product-info {
+    grid-column: 1;
+    grid-row: 2;
+  }
 }
 
 /*# sourceMappingURL=style-index.css.map*/
