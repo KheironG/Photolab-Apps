@@ -1,8 +1,6 @@
 import { react, useState, useEffect } from '@wordpress/element';
 
-const Frames = ( origin, dimensions ) => {
-    console.log(dimensions);
-    const [ frames , setFrames ] = useState({});
+const Frames = ( frames ) => {
 
     // const getFrames = async () => {
     //     const response = await fetch(
@@ -18,7 +16,8 @@ const Frames = ( origin, dimensions ) => {
 
 
   return (
-      <div>
+      <div className="gallery-app-option">
+          <label>Select Frames</label>
           <select name="">
           </select>
       </div>

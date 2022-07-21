@@ -1,8 +1,6 @@
 import { react, useState, useEffect } from '@wordpress/element';
 
-const Passepartouts = ( origin, dimensions ) => {
-
-    const [ passepartouts , setPassepartouts ] = useState({});
+const Passepartouts = ( passepartouts ) => {
 
     // const getFrames = async () => {
     //     const response = await fetch(
@@ -18,7 +16,8 @@ const Passepartouts = ( origin, dimensions ) => {
 
 
   return (
-      <div>
+      <div className="gallery-app-option">
+          <label>Select Passepartout</label>
           <select name="">
           </select>
       </div>
