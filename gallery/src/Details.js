@@ -11,30 +11,53 @@ const Details = ( props ) => {
     const [ availableFrames, setAvailableFrames ] = useState();
     const [ availablePassepartouts, setAvailablePassepartouts ] = useState();
 
-    const setOptions = (objects, selectedDimension) => {
+    const setMediums = (objects, selectedDimension) => {
+        getVariations('mediums', objects, selectedDimension);
+    }
+
+    const setFrames = (objects, selectedDimension) => {
+        getVariations('frames', objects, selectedDimension);
+    }
+
+    const setPassepartouts = (objects, selectedDimension) => {
+        getVariations('passepartouts', objects, selectedDimension);
+    }
+
+    const getVariations = async (type, objects, selectedDimension) => {
         const origin = window.location.origin;
-        objects.forEach(( object, i) => {
+        var options = [];
+        for ( let object of objects ) {
             if ( object.type === 'variable' ) {
-                const data = fetch(`${origin}/wp-json/photolab-app/v1/auth?task=variations&id=${object.id}`)
-                .then(response => response.json())
-                .then(data =>
-                    data.forEach(( variation, i) => {
-                        variation.attributes.forEach(( attribute, i) => {
+                const data = await fetch(
+                    `${origin}/wp-json/photolab-app/v1/auth?task=variations&id=${object.id}`
+                ).then(data => data.json());
+                    for ( let variation of data ) {
+                        for ( let attribute of variation.attributes ) {
                             if (attribute.name == 'Dimensions' && attribute.option ==  ( selectedDimension ) ) {
-                                let product = { id: variation.id, name: object.name, price: variation.price }
-                                console.log(product);
+                                options.push({ id: variation.id, name: object.name, price: variation.price });
                             }
-                        });
-                    })
-                );
+                        }
+                    }
             }
-        });
+        }
+        if ( type === 'mediums' ) {
+            setAvailableMediums(options);
+        } else if ( type === 'frames' ) {
+            setAvailableFrames(options);
+        } else if ( type === 'passepartouts' ) {
+            setAvailablePassepartouts(options);
+        }
     }
 
     useEffect(() => {
-        setOptions(props.mediums, selectedDimension);
+        setMediums(props.mediums, selectedDimension);
     }, [ selectedDimension ] );
 
+    useEffect(() => {
+        if ( availableMediums !== undefined && availableMediums.length !== 0 ) {
+            setFrames(props.frames, selectedDimension);
+        }
+    }, [ availableMediums ] );
 
     return (
       <>
@@ -52,6 +75,11 @@ const Details = ( props ) => {
                                 return <option value={dimension}>{dimension}</option>;
                             })}
                         </select>
+                        { availableFrames !== undefined
+                            && availableMediums !== undefined
+                                ? <p>options loaded</p>
+                                : <p>loading options</p>
+                        }
 
                         <label>Select Paper</label>
                         <select name="" onChange={event =>setSelectedDimension(event.target.value)}>
@@ -60,19 +88,6 @@ const Details = ( props ) => {
                             })}
                         </select>
 
-                        <label>Select Frames</label>
-                        <select name="" onChange={event =>setSelectedDimension(event.target.value)}>
-                            {props.dimensions.map(function( dimension, i ){
-                                return <option value={dimension}>{dimension}</option>;
-                            })}
-                        </select>
-
-                        <label>Select Passepartouts</label>
-                        <select name="" onChange={event =>setSelectedDimension(event.target.value)}>
-                            {props.dimensions.map(function( dimension, i ){
-                                return <option value={dimension}>{dimension}</option>;
-                            })}
-                        </select>
                     </div>
               </div>
           </div>

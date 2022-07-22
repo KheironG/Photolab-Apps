@@ -65,6 +65,7 @@ const GalleryApp = () => {
             `${origin}/wp-json/photolab-app/v1/auth?task=options&category=${categoryIds.medium}`
         ).then((data) => data.json());
         setMediums(data);
+        getFrames();
     };
     useEffect(() => { if ( categoryIds !== undefined ) { getMediums(); } }, [ categoryIds ] );
 
@@ -74,8 +75,8 @@ const GalleryApp = () => {
             `${origin}/wp-json/photolab-app/v1/auth?task=options&category=${categoryIds.frame}`
         ).then((data) => data.json());
         setFrames(data);
+        getPassepartouts();
     };
-    useEffect(() => { if ( mediums !== undefined ) { getFrames(); } }, [ mediums ] );
 
 
     const getPassepartouts = async () => {
@@ -84,7 +85,6 @@ const GalleryApp = () => {
         ).then((data) => data.json());
         setPassepartouts(data);
     };
-    useEffect(() => { if ( frames !== undefined ) { getPassepartouts(); } }, [ frames ] );
 
 
     return (
