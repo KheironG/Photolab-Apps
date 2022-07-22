@@ -3459,7 +3459,12 @@ const Details = props => {
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availablePassepartouts, setAvailablePassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
-  const [total, setTotal] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.image.price);
+  const [total, setTotal] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    image: parseInt(props.image.price),
+    frame: parseInt(10),
+    medium: parseInt(0),
+    passepartout: parseInt(0)
+  });
 
   const setMediums = (objects, selectedDimension) => {
     getVariations('mediums', objects, selectedDimension);
@@ -3775,7 +3780,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Total = props => {
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, props.total);
+  const total = props.total.image + props.total.frame + props.total.medium + props.total.passepartout;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, total);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Total);

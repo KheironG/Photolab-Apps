@@ -11,7 +11,11 @@ const Details = ( props ) => {
     const [ availableFrames, setAvailableFrames ] = useState();
     const [ availablePassepartouts, setAvailablePassepartouts ] = useState();
     const [ loaded, setLoaded ] = useState();
-    const [ total, setTotal ] = useState(props.image.price);
+    const [ total, setTotal ] = useState( {
+        image: parseInt(props.image.price),
+        frame: parseInt(10),
+        medium: parseInt(0),
+        passepartout: parseInt(0) } );
 
     const setMediums = (objects, selectedDimension) => {
         getVariations('mediums', objects, selectedDimension);
