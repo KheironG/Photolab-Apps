@@ -3446,7 +3446,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Image */ "./src/Image.js");
 /* harmony import */ var _Options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Options */ "./src/Options.js");
-/* harmony import */ var _Total__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Total */ "./src/Total.js");
+/* harmony import */ var _Product__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Product */ "./src/Product.js");
 
 
 
@@ -3459,12 +3459,21 @@ const Details = props => {
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availablePassepartouts, setAvailablePassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
-  const [total, setTotal] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    image: parseInt(props.image.price),
-    frame: parseInt(10),
-    medium: parseInt(0),
-    passepartout: parseInt(0)
+  const [order, setOrder] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    dimension: selectedDimension,
+    image_id: props.image.id,
+    image_price: parseInt(props.image.price),
+    frame_id: '',
+    medium_id: '',
+    passepartout_id: ''
   });
+
+  const setDimension = dimension => {
+    setSelectedDimension(dimension);
+    setOrder(prevState => ({ ...prevState,
+      dimension: dimension
+    }));
+  };
 
   const setMediums = (objects, selectedDimension) => {
     getVariations('mediums', objects, selectedDimension);
@@ -3500,12 +3509,14 @@ const Details = props => {
       }
     }
 
-    if (type === 'mediums') {
-      setAvailableMediums(options);
-    } else if (type === 'frames') {
-      setAvailableFrames(options);
-    } else if (type === 'passepartouts') {
-      setAvailablePassepartouts(options);
+    if (options.length !== 0) {
+      if (type === 'mediums') {
+        setAvailableMediums(options);
+      } else if (type === 'frames') {
+        setAvailableFrames(options);
+      } else if (type === 'passepartouts') {
+        setAvailablePassepartouts(options);
+      }
     }
   };
 
@@ -3513,17 +3524,17 @@ const Details = props => {
     setMediums(props.mediums, selectedDimension);
   }, [selectedDimension]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (availableMediums !== undefined && availableMediums.length !== 0) {
+    if (availableMediums !== undefined) {
       setFrames(props.frames, selectedDimension);
     }
   }, [availableMediums]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (availableFrames !== undefined && availableFrames.length !== 0) {
+    if (availableFrames !== undefined) {
       setPassepartouts(props.passepartouts, selectedDimension);
     }
   }, [availableFrames]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (availableMediums !== undefined && availableMediums.length !== 0 && availableFrames !== undefined && availableFrames.length !== 0 && availablePassepartouts !== undefined && availablePassepartouts.length !== 0) {
+    if (availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined) {
       setLoaded(true);
     }
   }, [availableMediums, availableFrames, availablePassepartouts]);
@@ -3534,30 +3545,33 @@ const Details = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, props.image.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex-start-center c-gap-20"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
-    className: ""
+    class: true
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-options"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Dimensions"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: "",
-    onChange: event => setSelectedDimension(event.target.value)
+    onChange: event => setDimension(event.target.value)
   }, props.dimensions.map(function (dimension, i) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: dimension
     }, dimension);
-  })), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }))), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Paper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: ""
+    onChange: event => setOrder(prevState => ({ ...prevState,
+      medium_id: parseInt(event.target.value)
+    }))
   }, availableMediums.map(function (option) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: option.id
-    }, option.name + option.price);
+    }, option.name, " ", 'kr' + option.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Frame"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: ""
+    onChange: event => setOrder(prevState => ({ ...prevState,
+      frame_id: parseInt(event.target.value)
+    }))
   }, availableFrames.map(function (option) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: option.id
@@ -3565,14 +3579,19 @@ const Details = props => {
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Passepartout"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: ""
+    onChange: event => setOrder(prevState => ({ ...prevState,
+      passepartout_id: parseInt(event.target.value)
+    }))
   }, availablePassepartouts.map(function (option) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: option.id
     }, option.name, " ", 'kr' + option.price);
-  })))) : null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Total__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    total: total
-  })));
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Order, {
+    mediums: availableMediums,
+    frames: availableFrames,
+    passepartouts: availablePassepartouts,
+    order: order
+  })) : null)));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Details);
@@ -3620,7 +3639,8 @@ const GalleryApp = () => {
     setImage({
       name: data.name,
       src: data.images[0].src,
-      price: data.price
+      price: data.price,
+      id: data.id
     });
     data.attributes.map(attribute => {
       if (attribute.name == 'Dimensions') {
@@ -3763,10 +3783,10 @@ const Options = props => {
 
 /***/ }),
 
-/***/ "./src/Total.js":
-/*!**********************!*\
-  !*** ./src/Total.js ***!
-  \**********************/
+/***/ "./src/Product.js":
+/*!************************!*\
+  !*** ./src/Product.js ***!
+  \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3779,12 +3799,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Total = props => {
-  const total = props.total.image + props.total.frame + props.total.medium + props.total.passepartout;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, total);
+const Product = props => {
+  const total = props.order.image + props.order.frame + props.order.medium + props.order.passepartout;
+
+  const createProduct = async () => {
+    if (props.order.image_id !== '' && props.order.medium_id !== '' && props.order.frame_id !== '' && props.order.passepartout_id !== '') {
+      const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=gallery&data=${props.order}`).then(data => data.json());
+      console.log(data);
+    }
+  };
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "gallery-app-total"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "total: ", total), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: createProduct,
+    className: "add-to-cart-button"
+  }, "Add to cart "));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Total);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Product);
 
 /***/ }),
 

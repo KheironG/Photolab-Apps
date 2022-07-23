@@ -2,7 +2,7 @@ import { react, useState, useEffect } from '@wordpress/element';
 
 import Image from "./Image";
 import Options from "./Options";
-import Total from "./Total";
+import Product from "./Product";
 
 const Details = ( props ) => {
 
@@ -11,12 +11,19 @@ const Details = ( props ) => {
     const [ availableFrames, setAvailableFrames ] = useState();
     const [ availablePassepartouts, setAvailablePassepartouts ] = useState();
     const [ loaded, setLoaded ] = useState();
-    const [ total, setTotal ] = useState( {
-        image: parseInt(props.image.price),
-        frame: parseInt(10),
-        medium: parseInt(0),
-        passepartout: parseInt(0) } );
+    const [ order, setOrder ] = useState( {
+        dimension: selectedDimension,
+        image_id: props.image.id,
+        image_price: parseInt(props.image.price),
+        frame_id: '',
+        medium_id: '',
+        passepartout_id: ''
+    });
 
+    const setDimension = ( dimension ) => {
+        setSelectedDimension(dimension);
+        setOrder(prevState => ({...prevState, dimension: dimension }))
+    }
     const setMediums = (objects, selectedDimension) => {
         getVariations('mediums', objects, selectedDimension);
     }
@@ -44,12 +51,14 @@ const Details = ( props ) => {
                     }
             }
         }
-        if ( type === 'mediums' ) {
-            setAvailableMediums(options);
-        } else if ( type === 'frames' ) {
-            setAvailableFrames(options);
-        } else if ( type === 'passepartouts' ) {
-            setAvailablePassepartouts(options);
+        if ( options.length !== 0 ) {
+            if ( type === 'mediums' ) {
+                setAvailableMediums(options);
+            } else if ( type === 'frames' ) {
+                setAvailableFrames(options);
+            } else if ( type === 'passepartouts' ) {
+                setAvailablePassepartouts(options);
+            }
         }
     }
 
@@ -59,24 +68,23 @@ const Details = ( props ) => {
     }, [ selectedDimension ] );
 
     useEffect(() => {
-        if ( availableMediums !== undefined && availableMediums.length !== 0 ) {
+        if ( availableMediums !== undefined ) {
             setFrames(props.frames, selectedDimension);
         }
     }, [ availableMediums ] );
 
     useEffect(() => {
-        if ( availableFrames !== undefined && availableFrames.length !== 0 ) {
+        if ( availableFrames !== undefined ) {
             setPassepartouts(props.passepartouts, selectedDimension);
         }
     }, [ availableFrames ] );
 
     useEffect(() => {
-        if ( availableMediums !== undefined && availableMediums.length !== 0
-                && availableFrames !== undefined && availableFrames.length !== 0
-                    && availablePassepartouts !== undefined && availablePassepartouts.length !== 0) {
-                    setLoaded(true);
+        if ( availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined ) {
+            setLoaded(true);
         }
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
+
 
     return (
       <>
@@ -84,29 +92,30 @@ const Details = ( props ) => {
           <div className="gallery-app-info">
               <h2>{props.image.name}</h2>
               <div className="flex-start-center c-gap-20">
-                  <h4 className=""></h4>
+                  <h4 class></h4>
               </div>
               <div className="gallery-app-options">
                     <div className="gallery-app-option">
                         <label>Select Dimensions</label>
-                        <select name="" onChange={event =>setSelectedDimension(event.target.value)}>
+                        <select onChange={event => setDimension(event.target.value)}>
                             {props.dimensions.map(function( dimension, i ){
                                 return <option value={dimension}>{dimension}</option>;
                             })}
                         </select>
-                        { loaded == true ?
+                    </div>
+                    { loaded == true ?
                                 <>
                                 <div className="gallery-app-option">
                                     <label>Select Paper</label>
-                                    <select name="" >
+                                    <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } >
                                         {availableMediums.map(function( option ){
-                                            return <option value={option.id}>{option.name + option.price }</option>;
+                                            return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
                                         })}
                                     </select>
                                 </div>
                                 <div className="gallery-app-option">
                                     <label>Select Frame</label>
-                                    <select name="" >
+                                    <select onChange={event => setOrder(prevState => ({...prevState, frame_id: parseInt(event.target.value) })) }  >
                                         {availableFrames.map(function( option ){
                                             return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
                                         })}
@@ -114,20 +123,18 @@ const Details = ( props ) => {
                                 </div>
                                 <div className="gallery-app-option">
                                     <label>Select Passepartout</label>
-                                    <select name="" >
+                                    <select onChange={event => setOrder(prevState => ({...prevState, passepartout_id: parseInt(event.target.value) })) }  >
                                         {availablePassepartouts.map(function( option ){
                                             return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
                                         })}
                                     </select>
                                 </div>
+                                <Order mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order}/>
                                 </>
                             :
                             null
-
                         }
-                    </div>
               </div>
-              < Total total={total}/>
           </div>
       </>
   );

@@ -3,10 +3,13 @@
 @import 'src/scss/common/mixins';
 @import 'src/scss/common/styling';
 @import 'src/scss/common/typography';
+@import 'src/scss/common/forms';
+@import 'src/scss/common/mixins';
 @import 'src/scss/common/app';
 
 //Elements
 @import 'src/scss/elements/containers';
+@import 'src/scss/elements/buttons';
 
-//Elements
-@import 'src/scss/templates/single-product';
+//Templates
+@import 'src/scss/templates/gallery-app';

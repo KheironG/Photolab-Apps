@@ -36,8 +36,8 @@ add_action('wp_enqueue_scripts', 'enq_photolab_apps');
 
 function register_wc_route() {
 	register_rest_route(
-		'photolabapp-auth/v1',
-		'photolabapp',
+		'photolab-app/v1',
+		'auth',
 		array(
 			'methods' => 'GET',
 			'callback' => 'photolab_apps_rest_cb',
@@ -63,8 +63,40 @@ function photolab_apps_rest_cb() {
 
     $task = filter_var( $_GET['task'], FILTER_SANITIZE_STRING );
     $id   = filter_var( $_GET['id'], FILTER_VALIDATE_INT );
+    $category = filter_var( $_GET['category'], FILTER_SANITIZE_STRING );
+    $attributes = filter_var( $_GET['attributes'] );
+    $data = json_decode( $_POST['data'] );
 
-    $query = $woocommerce->get( 'products', [ 'id' => $id ] );
+    switch ( $task ) {
+        case 'image':
+            $query = $woocommerce->get( 'products/' . $id  );
+            break;
+        case 'categories':
+            $query = $woocommerce->get( 'products/categories' );
+            break;
+        case 'options':
+            $query = $woocommerce->get( 'products?category=' .$category );
+            break;
+        case 'variations':
+            $query = $woocommerce->get( 'products/'. $id .'/variations/' );
+            break;
+        case 'gallery':
+            $image_id = filter_var( $data->image_id, FILTER_VALIDATE_INT );
+            $frame_id = filter_var( $data->frame_id, FILTER_VALIDATE_INT );
+            $medium_id = filter_var( $data->medium_id, FILTER_VALIDATE_INT );
+            $passepartout_id = filter_var( $data->passepartout_id, FILTER_VALIDATE_INT );
+            $product = [
+                'name' => 'Gallery Product',
+                'type' => 'grouped',
+                'grouped_products' => [ $image_id, $frame_id, $medium_id, $passepartout_id ]
+            ];
+            $query = $woocommerce->post( 'products', $product );
+            break;
+        default:
+            // code...
+            break;
+    }
+
 
     echo json_encode($query);
     exit;

@@ -29,7 +29,7 @@ const GalleryApp = () => {
         const data = await fetch(
             `${origin}/wp-json/photolab-app/v1/auth?task=image&id=${productID}`
         ).then((data) => data.json());
-        setImage( { name: data.name, src: data.images[0].src, price: data.price } );
+        setImage( { name: data.name, src: data.images[0].src, price: data.price, id: data.id } );
         data.attributes.map((attribute) => {
             if ( attribute.name == 'Dimensions' ) {
                 setDimensions(attribute.options);

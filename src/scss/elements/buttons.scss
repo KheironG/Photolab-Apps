@@ -1,0 +1,51 @@
+a.hero-button-link,
+a.more-info-button,
+a.select-product-button,
+.add-to-cart-button,
+.paginate-button {
+    max-width: 100%;
+    padding: 20px 35px;
+    font-family: 'spartan_medium';
+    letter-spacing: 3px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    border-color: black;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+}
+
+a.hero-button-link,
+.paginate-button {
+    color: black;
+    border: 1px solid black;
+}
+
+.paginate-button {
+    max-width: 100%;
+    padding: 10px 35px;
+}
+
+a.more-info-button {
+    width: 100%;
+    padding: 10px 35px;
+    color: white;
+    background-color: $orange-600;
+}
+
+.add-to-cart-button {
+    width: 100%;
+    background-color: $orange-900;
+    color: white;
+}
+
+a.select-product-button,
+.woocommerce .woocommerce-form-login .woocommerce-form-login__submit {
+    width: 100%;
+    padding: 10px 35px;
+    color: white;
+    background-color: $orange-900;
+    border-radius: none;
+}

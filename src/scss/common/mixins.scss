@@ -10,10 +10,30 @@
     align-items: center;
 }
 
+@mixin flex-space-between {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+
+@mixin flex-start-column {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
 @mixin flex-center-column {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+@mixin flex-end-column {
+    display: flex;
+    justify-content: center;
+    align-items:flex-end;
     flex-direction: column;
 }
 
