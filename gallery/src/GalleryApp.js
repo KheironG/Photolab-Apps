@@ -16,10 +16,8 @@ const GalleryApp = () => {
     const productID   = urlParams.get('image');
     const origin      = window.location.origin;
 
-
-    const [ image, setImage ] = useState({});
-    const [ dimensions, setDimensions ] = useState({});
-    const [ categoryIds, setCategoryIds ] = useState();
+    const [ image, setImage ] = useState();
+    const [ dimensions, setDimensions ] = useState();
     const [ mediums, setMediums ] = useState();
     const [ frames, setFrames ] = useState();
     const [ passepartouts, setPassepartouts ] = useState();
@@ -35,56 +33,43 @@ const GalleryApp = () => {
                 setDimensions(attribute.options);
             }
         })
-        getCategoryIds();
     };
-    useEffect(() => { getImage(); }, [] );
 
 
-    const getCategoryIds = async () => {
+    const getProducts = async () => {
         const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=categories`
+            `${origin}/wp-json/photolab-app/v1/auth?task=options`
         ).then((data) => data.json());
-        const ids = { medium: '', frame: '', passepartout: '' };
-        data.map((category) => {
-            if ( category.slug == 'print-mediums' ) {
-                ids.medium = category.id;
+        let mediums = [];
+        let frames = [];
+        let passepartouts = [];
+        for ( let option of data ) {
+            for ( let category of option.category ) {
+                switch ( category.name ) {
+                    case 'Print Mediums':
+                        mediums.push(option);
+                        break;
+                    case 'Passepartouts':
+                        passepartouts.push(option);
+                        break;
+                    case 'Frames':
+                    frames.push(option);
+                    break;
+                    default:
+                        break;
+                }
             }
-            if ( category.slug == 'frames' ) {
-                ids.frame = category.id;
-            }
-            if ( category.slug == 'passepartouts' ) {
-                ids.passepartout = category.id;
-            }
-        })
-        setCategoryIds(ids);
+        }
+        setMediums(mediums);
+        setFrames(frames);
+        setPassepartouts(passepartouts);
     };
 
 
-    const getMediums = async () => {
-        const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=options&category=${categoryIds.medium}`
-        ).then((data) => data.json());
-        setMediums(data);
-        getFrames();
-    };
-    useEffect(() => { if ( categoryIds !== undefined ) { getMediums(); } }, [ categoryIds ] );
-
-
-    const getFrames = async () => {
-        const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=options&category=${categoryIds.frame}`
-        ).then((data) => data.json());
-        setFrames(data);
-        getPassepartouts();
-    };
-
-
-    const getPassepartouts = async () => {
-        const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=options&category=${categoryIds.passepartout}`
-        ).then((data) => data.json());
-        setPassepartouts(data);
-    };
+    useEffect(() => {
+        getImage();
+        getProducts();
+    }, [] );
 
 
     return (

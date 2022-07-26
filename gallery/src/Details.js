@@ -10,7 +10,7 @@ const Details = ( props ) => {
     const [ availableMediums, setAvailableMediums ] = useState();
     const [ availableFrames, setAvailableFrames ] = useState();
     const [ availablePassepartouts, setAvailablePassepartouts ] = useState();
-    const [ loaded, setLoaded ] = useState();
+    const [ loaded, setLoaded ] = useState(false);
     const [ order, setOrder ] = useState( {
         dimension: selectedDimension,
         image_id: props.image.id,
@@ -20,37 +20,16 @@ const Details = ( props ) => {
         passepartout_id: ''
     });
 
-    const setDimension = ( dimension ) => {
-        setSelectedDimension(dimension);
-        setOrder(prevState => ({...prevState, dimension: dimension }))
-    }
-    const setMediums = (objects, selectedDimension) => {
-        getVariations('mediums', objects, selectedDimension);
-    }
-    const setFrames = (objects, selectedDimension) => {
-        getVariations('frames', objects, selectedDimension);
-    }
-    const setPassepartouts = (objects, selectedDimension) => {
-        getVariations('passepartouts', objects, selectedDimension);
-    }
+    const setVariations = async (type, objects, selectedDimension) => {
 
-    const getVariations = async (type, objects, selectedDimension) => {
-        const origin = window.location.origin;
-        var options = [];
-        for ( let object of objects ) {
-            if ( object.type === 'variable' ) {
-                const data = await fetch(
-                    `${origin}/wp-json/photolab-app/v1/auth?task=variations&id=${object.id}`
-                ).then(data => data.json());
-                    for ( let variation of data ) {
-                        for ( let attribute of variation.attributes ) {
-                            if (attribute.name == 'Dimensions' && attribute.option ==  ( selectedDimension ) ) {
-                                options.push({ id: variation.id, name: object.name, price: variation.price });
-                            }
-                        }
-                    }
+        for ( let variation of objects ) {
+            for ( let attribute of variation.attributes ) {
+                if (attribute.name == 'Dimensions' && attribute.option ==  ( selectedDimension ) ) {
+                    options.push({ id: variation.id, name: object.name, price: variation.price });
+                }
             }
         }
+
         if ( options.length !== 0 ) {
             if ( type === 'mediums' ) {
                 setAvailableMediums(options);
@@ -60,28 +39,35 @@ const Details = ( props ) => {
                 setAvailablePassepartouts(options);
             }
         }
+
     }
 
+    const setDimension = ( dimension ) => {
+        setSelectedDimension(dimension);
+        setOrder(prevState => ({...prevState, dimension: dimension }))
+    }
+    const setMediums = ( objects, selectedDimension ) => {
+        setAvailableMediums(dimension);
+    }
+    const setFrames = ( objects, selectedDimension ) => {
+        setAvailableFrames(dimension);
+    }
+    const setPassepartouts = ( objects, selectedDimension ) => {
+        setAvailablePassepartouts(dimension);
+    }
 
     useEffect(() => {
-        setMediums(props.mediums, selectedDimension);
+        if ( selectedDimension !== undefined ) {
+            setAvailableMediums(props.mediums);
+            setAvailableFrames(props.frames);
+            setAvailablePassepartouts(props.passepartouts);
+        }
     }, [ selectedDimension ] );
 
     useEffect(() => {
-        if ( availableMediums !== undefined ) {
-            setFrames(props.frames, selectedDimension);
-        }
-    }, [ availableMediums ] );
-
-    useEffect(() => {
-        if ( availableFrames !== undefined ) {
-            setPassepartouts(props.passepartouts, selectedDimension);
-        }
-    }, [ availableFrames ] );
-
-    useEffect(() => {
-        if ( availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined ) {
+        if ( availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined  ) {
             setLoaded(true);
+            console.log(availableFrames);
         }
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
 
@@ -104,36 +90,36 @@ const Details = ( props ) => {
                         </select>
                     </div>
                     { loaded == true ?
-                                <>
-                                <div className="gallery-app-option">
-                                    <label>Select Paper</label>
-                                    <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } >
-                                        {availableMediums.map(function( option ){
-                                            return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="gallery-app-option">
-                                    <label>Select Frame</label>
-                                    <select onChange={event => setOrder(prevState => ({...prevState, frame_id: parseInt(event.target.value) })) }  >
-                                        {availableFrames.map(function( option ){
-                                            return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="gallery-app-option">
-                                    <label>Select Passepartout</label>
-                                    <select onChange={event => setOrder(prevState => ({...prevState, passepartout_id: parseInt(event.target.value) })) }  >
-                                        {availablePassepartouts.map(function( option ){
-                                            return <option value={option.id}>{option.name} {'kr' + option.price}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                                <Order mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order}/>
-                                </>
-                            :
-                            null
-                        }
+                        <>
+                        <div className="gallery-app-option">
+                            <label>Select Paper</label>
+                            <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } >
+                                {availableMediums.map(function( variation ){
+                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <div className="gallery-app-option">
+                            <label>Select Frame</label>
+                            <select onChange={event => setOrder(prevState => ({...prevState, frame_id: parseInt(event.target.value) })) }  >
+                                {availableFrames.map(function( variation ){
+                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <div className="gallery-app-option">
+                            <label>Select Passepartout</label>
+                            <select onChange={event => setOrder(prevState => ({...prevState, passepartout_id: parseInt(event.target.value) })) }  >
+                                {availablePassepartouts.map(function( variation ){
+                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <Product mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order}/>
+                        </>
+                        :
+                        null
+                    }
               </div>
           </div>
       </>
