@@ -6,6 +6,9 @@ import Product from "./Product";
 
 const Details = ( props ) => {
 
+    const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+    const title = props.image.name;
+
     const [ selectedDimension, setSelectedDimension ] = useState();
     const [ availableMediums, setAvailableMediums ] = useState();
     const [ availableFrames, setAvailableFrames ] = useState();
@@ -14,22 +17,23 @@ const Details = ( props ) => {
     const [ order, setOrder ] = useState( {
         dimension: selectedDimension,
         image_id: props.image.id,
-        image_price: parseInt(props.image.price),
-        frame_id: '',
+        image_price: parseInt(0),
+        frame_id: 0,
         medium_id: '',
         passepartout_id: ''
     });
 
-    const setVariations = async (type, objects, selectedDimension) => {
-
-        for ( let variation of objects ) {
-            for ( let attribute of variation.attributes ) {
-                if (attribute.name == 'Dimensions' && attribute.option ==  ( selectedDimension ) ) {
-                    options.push({ id: variation.id, name: object.name, price: variation.price });
+    const setVariations = ( type, objects, selectedDimension ) => {
+        var options = [];
+        var dimension = selectedDimension.replace(/[^0-9]/gi, '');
+        for ( let object of objects ) {
+            for ( let variation of object.variations ) {
+                let pa_dimensions = variation.attributes.attribute_pa_dimensions.replace(/[^0-9]/gi, '');;
+                if ( pa_dimensions === dimension ) {
+                    options.push({ id: variation.variation_id, name: object.object.name, price: variation.display_price });
                 }
             }
         }
-
         if ( options.length !== 0 ) {
             if ( type === 'mediums' ) {
                 setAvailableMediums(options);
@@ -39,35 +43,35 @@ const Details = ( props ) => {
                 setAvailablePassepartouts(options);
             }
         }
-
     }
 
     const setDimension = ( dimension ) => {
         setSelectedDimension(dimension);
         setOrder(prevState => ({...prevState, dimension: dimension }))
     }
-    const setMediums = ( objects, selectedDimension ) => {
-        setAvailableMediums(dimension);
+    const setMediums = ( props, selectedDimension ) => {
+        setVariations( 'mediums', props.mediums, selectedDimension );
     }
-    const setFrames = ( objects, selectedDimension ) => {
-        setAvailableFrames(dimension);
+    const setFrames = ( props, selectedDimension ) => {
+        setVariations( 'frames', props.frames, selectedDimension );
     }
-    const setPassepartouts = ( objects, selectedDimension ) => {
-        setAvailablePassepartouts(dimension);
+    const setPassepartouts = ( props, selectedDimension ) => {
+        setVariations( 'passepartouts', props.passepartouts, selectedDimension );
     }
+
 
     useEffect(() => {
         if ( selectedDimension !== undefined ) {
-            setAvailableMediums(props.mediums);
-            setAvailableFrames(props.frames);
-            setAvailablePassepartouts(props.passepartouts);
+            setMediums( props, selectedDimension);
+            setFrames( props, selectedDimension);
+            setPassepartouts( props, selectedDimension);
         }
     }, [ selectedDimension ] );
+
 
     useEffect(() => {
         if ( availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined  ) {
             setLoaded(true);
-            console.log(availableFrames);
         }
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
 
@@ -76,14 +80,13 @@ const Details = ( props ) => {
       <>
           <Image image={props.image}/>
           <div className="gallery-app-info">
-              <h2>{props.image.name}</h2>
-              <div className="flex-start-center c-gap-20">
-                  <h4 class></h4>
-              </div>
+              {title !== '' ? <h2>{title}</h2>: null}
+              {title !== '' ? <p>{description}</p>: null}
               <div className="gallery-app-options">
                     <div className="gallery-app-option">
-                        <label>Select Dimensions</label>
-                        <select onChange={event => setDimension(event.target.value)}>
+                        <label>välj storlek</label>
+                        <select onChange={event => setDimension(event.target.value)} required>
+                            <option>Inte valt</option>
                             {props.dimensions.map(function( dimension, i ){
                                 return <option value={dimension}>{dimension}</option>;
                             })}
@@ -92,26 +95,29 @@ const Details = ( props ) => {
                     { loaded == true ?
                         <>
                         <div className="gallery-app-option">
-                            <label>Select Paper</label>
-                            <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } >
+                            <label>Välj papper</label>
+                            <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } required>
+                                <option>Inte valt</option>
                                 {availableMediums.map(function( variation ){
-                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                                 })}
                             </select>
                         </div>
                         <div className="gallery-app-option">
-                            <label>Select Frame</label>
+                            <label>Välj ram</label>
                             <select onChange={event => setOrder(prevState => ({...prevState, frame_id: parseInt(event.target.value) })) }  >
+                                <option>Ingen ram</option>
                                 {availableFrames.map(function( variation ){
-                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                                 })}
                             </select>
                         </div>
                         <div className="gallery-app-option">
-                            <label>Select Passepartout</label>
+                            <label>Ingen passepartout</label>
                             <select onChange={event => setOrder(prevState => ({...prevState, passepartout_id: parseInt(event.target.value) })) }  >
+                                <option>Ingen passepartout</option>
                                 {availablePassepartouts.map(function( variation ){
-                                    return <option value={variation.object.id}>{variation.object.name} {'kr' + variation.object.price}</option>;
+                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                                 })}
                             </select>
                         </div>

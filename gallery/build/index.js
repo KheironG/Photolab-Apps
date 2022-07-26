@@ -3454,6 +3454,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Details = props => {
+  const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+  const title = props.image.name;
   const [selectedDimension, setSelectedDimension] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableMediums, setAvailableMediums] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
@@ -3462,20 +3464,26 @@ const Details = props => {
   const [order, setOrder] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
     dimension: selectedDimension,
     image_id: props.image.id,
-    image_price: parseInt(props.image.price),
-    frame_id: '',
+    image_price: parseInt(0),
+    frame_id: 0,
     medium_id: '',
     passepartout_id: ''
   });
 
-  const setVariations = async (type, objects, selectedDimension) => {
-    for (let variation of objects) {
-      for (let attribute of variation.attributes) {
-        if (attribute.name == 'Dimensions' && attribute.option == selectedDimension) {
+  const setVariations = (type, objects, selectedDimension) => {
+    var options = [];
+    var dimension = selectedDimension.replace(/[^0-9]/gi, '');
+
+    for (let object of objects) {
+      for (let variation of object.variations) {
+        let pa_dimensions = variation.attributes.attribute_pa_dimensions.replace(/[^0-9]/gi, '');
+        ;
+
+        if (pa_dimensions === dimension) {
           options.push({
-            id: variation.id,
-            name: object.name,
-            price: variation.price
+            id: variation.variation_id,
+            name: object.object.name,
+            price: variation.display_price
           });
         }
       }
@@ -3499,79 +3507,76 @@ const Details = props => {
     }));
   };
 
-  const setMediums = (objects, selectedDimension) => {
-    setAvailableMediums(dimension);
+  const setMediums = (props, selectedDimension) => {
+    setVariations('mediums', props.mediums, selectedDimension);
   };
 
-  const setFrames = (objects, selectedDimension) => {
-    setAvailableFrames(dimension);
+  const setFrames = (props, selectedDimension) => {
+    setVariations('frames', props.frames, selectedDimension);
   };
 
-  const setPassepartouts = (objects, selectedDimension) => {
-    setAvailablePassepartouts(dimension);
+  const setPassepartouts = (props, selectedDimension) => {
+    setVariations('passepartouts', props.passepartouts, selectedDimension);
   };
 
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (selectedDimension !== undefined) {
-      setAvailableMediums(props.mediums);
-      setAvailableFrames(props.frames);
-      setAvailablePassepartouts(props.passepartouts);
+      setMediums(props, selectedDimension);
+      setFrames(props, selectedDimension);
+      setPassepartouts(props, selectedDimension);
     }
   }, [selectedDimension]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (availableMediums !== undefined && availableFrames !== undefined && availablePassepartouts !== undefined) {
       setLoaded(true);
-      console.log(availableFrames);
     }
   }, [availableMediums, availableFrames, availablePassepartouts]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
     image: props.image
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-info"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, props.image.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex-start-center c-gap-20"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
-    class: true
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title) : null, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, description) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-options"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Dimensions"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    onChange: event => setDimension(event.target.value)
-  }, props.dimensions.map(function (dimension, i) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "v\xE4lj storlek"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    onChange: event => setDimension(event.target.value),
+    required: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Inte valt"), props.dimensions.map(function (dimension, i) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: dimension
     }, dimension);
   }))), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Paper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj papper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: event => setOrder(prevState => ({ ...prevState,
       medium_id: parseInt(event.target.value)
-    }))
-  }, availableMediums.map(function (variation) {
+    })),
+    required: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Inte valt"), availableMediums.map(function (variation) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.object.id
-    }, variation.object.name, " ", 'kr' + variation.object.price);
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Frame"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj ram"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: event => setOrder(prevState => ({ ...prevState,
       frame_id: parseInt(event.target.value)
     }))
-  }, availableFrames.map(function (variation) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen ram"), availableFrames.map(function (variation) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.object.id
-    }, variation.object.name, " ", 'kr' + variation.object.price);
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Passepartout"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Ingen passepartout"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: event => setOrder(prevState => ({ ...prevState,
       passepartout_id: parseInt(event.target.value)
     }))
-  }, availablePassepartouts.map(function (variation) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen passepartout"), availablePassepartouts.map(function (variation) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.object.id
-    }, variation.object.name, " ", 'kr' + variation.object.price);
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Product__WEBPACK_IMPORTED_MODULE_3__["default"], {
     mediums: availableMediums,
     frames: availableFrames,
@@ -3624,8 +3629,8 @@ const GalleryApp = () => {
     setImage({
       name: data.name,
       src: data.images[0].src,
-      price: data.price,
-      id: data.id
+      id: data.id,
+      desc: data.short_description
     });
     data.attributes.map(attribute => {
       if (attribute.name == 'Dimensions') {
@@ -3770,12 +3775,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Product = props => {
-  const total = props.order.image + props.order.frame + props.order.medium + props.order.passepartout;
+  const setProduct = (products, id) => {
+    if (id == '') {
+      return 0;
+    } else {
+      for (let instance of products) {
+        if (instance.id == id) {
+          return parseInt(instance.price);
+        }
+      }
+    }
+  };
+
+  let mediumPrice = setProduct(props.mediums, props.order.medium_id);
+  let framePrice = setProduct(props.frames, props.order.frame_id);
+  let passepartoutPrice = setProduct(props.passepartouts, props.order.passepartout_id);
+  const total = props.order.image_price + mediumPrice + framePrice + passepartoutPrice;
 
   const createProduct = async () => {
     if (props.order.image_id !== '' && props.order.medium_id !== '' && props.order.frame_id !== '' && props.order.passepartout_id !== '') {
       const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=gallery&data=${props.order}`).then(data => data.json());
-      console.log(data);
     }
   };
 
@@ -3784,7 +3803,7 @@ const Product = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "total: ", total), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: createProduct,
     className: "add-to-cart-button"
-  }, "Add to cart "));
+  }, "L\xE4gg i varukorgen "));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Product);
