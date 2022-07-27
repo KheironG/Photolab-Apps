@@ -3454,8 +3454,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Details = props => {
-  const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
-  const title = props.image.name;
   const [selectedDimension, setSelectedDimension] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableMediums, setAvailableMediums] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
@@ -3531,9 +3529,27 @@ const Details = props => {
       setLoaded(true);
     }
   }, [availableMediums, availableFrames, availablePassepartouts]);
+  const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+  const title = props.image.name;
+
+  const uploadImage = async () => {
+    const input = document.getElementById('photolab-upload-image');
+    let image = new FormData();
+    image.append('file', input.files[0]);
+    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
+      method: 'POST',
+      body: image
+    }).then(data => data.json());
+    console.log(data);
+  };
+
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
     image: props.image
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "file",
+    id: "photolab-upload-image",
+    onChange: uploadImage
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-info"
   }, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title) : null, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, description) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-options"
@@ -3625,7 +3641,7 @@ const GalleryApp = () => {
   const [passepartouts, setPassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
 
   const getImage = async () => {
-    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=image&id=${productID}`).then(data => data.json());
+    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${productID}`).then(data => data.json());
     setImage({
       name: data.name,
       src: data.images[0].src,
@@ -3775,7 +3791,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Product = props => {
-  const setProduct = (products, id) => {
+  const setPrice = (products, id) => {
     if (id == '') {
       return 0;
     } else {
@@ -3792,7 +3808,7 @@ const Product = props => {
   let passepartoutPrice = setProduct(props.passepartouts, props.order.passepartout_id);
   const total = props.order.image_price + mediumPrice + framePrice + passepartoutPrice;
 
-  const createProduct = async () => {
+  const addToCart = async () => {
     if (props.order.image_id !== '' && props.order.medium_id !== '' && props.order.frame_id !== '' && props.order.passepartout_id !== '') {
       const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=gallery&data=${props.order}`).then(data => data.json());
     }
@@ -3801,7 +3817,7 @@ const Product = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-total"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "total: ", total), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: createProduct,
+    onClick: addToCart,
     className: "add-to-cart-button"
   }, "L\xE4gg i varukorgen "));
 };

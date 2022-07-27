@@ -6,13 +6,11 @@ import Product from "./Product";
 
 const Details = ( props ) => {
 
-    const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
-    const title = props.image.name;
-
     const [ selectedDimension, setSelectedDimension ] = useState();
     const [ availableMediums, setAvailableMediums ] = useState();
     const [ availableFrames, setAvailableFrames ] = useState();
     const [ availablePassepartouts, setAvailablePassepartouts ] = useState();
+    const [ customImage, setCustomImage ] = useState();
     const [ loaded, setLoaded ] = useState(false);
     const [ order, setOrder ] = useState( {
         dimension: selectedDimension,
@@ -75,10 +73,33 @@ const Details = ( props ) => {
         }
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
 
+    const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+    const title = props.image.name;
+
+    const uploadImage = async () => {
+
+        const input = document.getElementById('photolab-upload-image');
+        let image = new FormData();
+        image.append('file', input.files[0]);
+
+        const data = await fetch(
+            `${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
+              method: 'POST',
+              body: image,
+          }
+        ).then((data) => data.json());
+        setCustomImage(data);
+        return;
+    };
+
 
     return (
       <>
           <Image image={props.image}/>
+          <label>
+            <input type="file" id="photolab-upload-image" onChange={uploadImage}/>
+          </label>
+
           <div className="gallery-app-info">
               {title !== '' ? <h2>{title}</h2>: null}
               {title !== '' ? <p>{description}</p>: null}

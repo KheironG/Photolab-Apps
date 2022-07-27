@@ -13,7 +13,7 @@ const GalleryApp = () => {
 
     const queryString = window.location.search;
     const urlParams   = new URLSearchParams(queryString);
-    const productID   = urlParams.get('image');
+    const imageID   = urlParams.get('image');
     const origin      = window.location.origin;
 
     const [ image, setImage ] = useState();
@@ -25,9 +25,9 @@ const GalleryApp = () => {
 
     const getImage = async () => {
         const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=image&id=${productID}`
+            `${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${imageID}`
         ).then((data) => data.json());
-        setImage( { name: data.name, src: data.images[0].src, id: data.id, desc: data.short_description  } );
+        setImage( { name: data.name, src: data.images[0].src, id: data.id, desc: data.short_description } );
         data.attributes.map((attribute) => {
             if ( attribute.name == 'Dimensions' ) {
                 setDimensions(attribute.options);
@@ -67,7 +67,9 @@ const GalleryApp = () => {
 
 
     useEffect(() => {
-        getImage();
+        if ( imageID !== null ) {
+            getImage();
+        }
         getProducts();
     }, [] );
 
