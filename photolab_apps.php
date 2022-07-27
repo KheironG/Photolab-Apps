@@ -39,7 +39,7 @@ function register_wc_route() {
 		'photolab-app/v1',
 		'auth',
 		array(
-			'methods' => 'GET',
+			'methods' => array( 'GET', 'POST' ),
 			'callback' => 'photolab_apps_rest_cb',
             'permission_callback' => '__return_true'
 		)
@@ -63,22 +63,43 @@ function photolab_apps_rest_cb() {
 
     $task = filter_var( $_GET['task'], FILTER_SANITIZE_STRING );
     $id   = filter_var( $_GET['id'], FILTER_VALIDATE_INT );
-    $category = filter_var( $_GET['category'], FILTER_SANITIZE_STRING );
     $attributes = filter_var( $_GET['attributes'] );
     $data = json_decode( $_POST['data'] );
+    $file = $_FILES['file'];
 
     switch ( $task ) {
-        case 'image':
+        case 'get-image':
             $query = $woocommerce->get( 'products/' . $id  );
+            break;
+        case 'upload-image':
+            require_once( ABSPATH . 'wp-admin/includes/file.php' );
+            $image = wp_handle_upload( $file, array( 'test_form' => false )  );
+            $upload_directory = wp_upload_dir();
+            if ( !file_exists( $upload_directory['basedir']  . '/gallery-app/' ) ) {
+                mkdir( $upload_directory['basedir']  . '/gallery-app/', 0777, true );
+            }
+            $move = rename( $image['file'], $upload_directory['basedir']  . '/gallery-app/' . $file['name'] );
+            $query = $upload_directory['baseurl']  . '/gallery-app/' . $file['name'];
             break;
         case 'categories':
             $query = $woocommerce->get( 'products/categories' );
             break;
         case 'options':
-            $query = $woocommerce->get( 'products?category=' .$category );
-            break;
-        case 'variations':
-            $query = $woocommerce->get( 'products/'. $id .'/variations/' );
+            $args = new WC_Product_Query( array(
+                'limit' => 10,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'category' => array( 'frames', 'passepartouts', 'print-mediums' )
+            ) );
+            $options = $args->get_products();
+            $query = array();
+            foreach ( $options as $option ) {
+                $product['object'] = $option->get_data();
+                $product['attributes'] = get_the_terms( $option->id, 'pa_dimensions' );
+                $product['variations'] = $option->get_available_variations();
+                $product['category'] = get_the_terms( $option->id, 'product_cat' );
+                array_push( $query, $product );
+            }
             break;
         case 'gallery':
             $image_id = filter_var( $data->image_id, FILTER_VALIDATE_INT );
@@ -88,7 +109,7 @@ function photolab_apps_rest_cb() {
             $product = [
                 'name' => 'Gallery Product',
                 'type' => 'grouped',
-                'grouped_products' => [ $image_id, $frame_id, $medium_id, $passepartout_id ]
+                'grouped_products' => [ $image_id, $frame_id, $medium_id, $passepartout_id  ]
             ];
             $query = $woocommerce->post( 'products', $product );
             break;
@@ -96,7 +117,6 @@ function photolab_apps_rest_cb() {
             // code...
             break;
     }
-
 
     echo json_encode($query);
     exit;

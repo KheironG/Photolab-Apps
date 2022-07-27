@@ -3454,10 +3454,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Details = props => {
+  const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+  const title = props.image.name;
   const [selectedDimension, setSelectedDimension] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableMediums, setAvailableMediums] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availablePassepartouts, setAvailablePassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
+  const [customImage, setCustomImage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [order, setOrder] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
     dimension: selectedDimension,
@@ -3529,26 +3532,25 @@ const Details = props => {
       setLoaded(true);
     }
   }, [availableMediums, availableFrames, availablePassepartouts]);
-  const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
-  const title = props.image.name;
 
-  const uploadImage = async () => {
-    const input = document.getElementById('photolab-upload-image');
+  const CustomImage = async () => {
+    const input = document.getElementById('photolab-gallery-custom-image');
     let image = new FormData();
     image.append('file', input.files[0]);
     const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
       method: 'POST',
       body: image
     }).then(data => data.json());
-    console.log(data);
+    setCustomImage(data);
+    return;
   };
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
     image: props.image
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "file",
-    id: "photolab-upload-image",
-    onChange: uploadImage
+    id: "photolab-gallery-custom-image",
+    onChange: CustomImage
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-info"
   }, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title) : null, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, description) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3632,7 +3634,7 @@ __webpack_require__.r(__webpack_exports__);
 const GalleryApp = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const productID = urlParams.get('image');
+  const imageID = urlParams.get('image');
   const origin = window.location.origin;
   const [image, setImage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [dimensions, setDimensions] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
@@ -3641,18 +3643,26 @@ const GalleryApp = () => {
   const [passepartouts, setPassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
 
   const getImage = async () => {
-    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${productID}`).then(data => data.json());
-    setImage({
-      name: data.name,
-      src: data.images[0].src,
-      id: data.id,
-      desc: data.short_description
-    });
-    data.attributes.map(attribute => {
-      if (attribute.name == 'Dimensions') {
-        setDimensions(attribute.options);
-      }
-    });
+    //If image product, get product and attached dimension attribute terms
+    if (imageID !== 'null') {
+      const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${imageID}`).then(data => data.json());
+      console.log(data);
+      setImage({
+        name: data.name,
+        src: data.images[0].src,
+        id: data.id,
+        desc: data.short_description
+      });
+      data.attributes.map(attribute => {
+        if (attribute.name == 'Dimensions') {
+          setDimensions(attribute.options);
+        }
+      }); //If custom image, get attached dimensions attribute terms
+    } else {
+      setImage({
+        name: null
+      });
+    }
   };
 
   const getProducts = async () => {

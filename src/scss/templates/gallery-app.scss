@@ -57,7 +57,7 @@
         .gallery-app-options {
             @include flex-start-column;
             width: 100%;
-            grid-gap: 15px;
+            grid-gap: 20px;
 
             .gallery-app-option {
                 @include flex-start-column;

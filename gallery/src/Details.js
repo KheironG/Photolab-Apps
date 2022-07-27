@@ -6,6 +6,9 @@ import Product from "./Product";
 
 const Details = ( props ) => {
 
+    const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
+    const title = props.image.name;
+
     const [ selectedDimension, setSelectedDimension ] = useState();
     const [ availableMediums, setAvailableMediums ] = useState();
     const [ availableFrames, setAvailableFrames ] = useState();
@@ -73,12 +76,9 @@ const Details = ( props ) => {
         }
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
 
-    const description = props.image.desc.replace(/(<([^>]+)>)/gi, "");
-    const title = props.image.name;
 
-    const uploadImage = async () => {
-
-        const input = document.getElementById('photolab-upload-image');
+    const CustomImage = async () => {
+        const input = document.getElementById('photolab-gallery-custom-image');
         let image = new FormData();
         image.append('file', input.files[0]);
 
@@ -97,7 +97,7 @@ const Details = ( props ) => {
       <>
           <Image image={props.image}/>
           <label>
-            <input type="file" id="photolab-upload-image" onChange={uploadImage}/>
+            <input type="file" id="photolab-gallery-custom-image" onChange={CustomImage}/>
           </label>
 
           <div className="gallery-app-info">

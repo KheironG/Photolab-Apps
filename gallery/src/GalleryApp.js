@@ -14,7 +14,7 @@ const GalleryApp = () => {
     const queryString = window.location.search;
     const urlParams   = new URLSearchParams(queryString);
     const imageID   = urlParams.get('image');
-    const origin      = window.location.origin;
+    const origin  = window.location.origin;
 
     const [ image, setImage ] = useState();
     const [ dimensions, setDimensions ] = useState();
@@ -22,17 +22,23 @@ const GalleryApp = () => {
     const [ frames, setFrames ] = useState();
     const [ passepartouts, setPassepartouts ] = useState();
 
-
     const getImage = async () => {
-        const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${imageID}`
-        ).then((data) => data.json());
-        setImage( { name: data.name, src: data.images[0].src, id: data.id, desc: data.short_description } );
-        data.attributes.map((attribute) => {
-            if ( attribute.name == 'Dimensions' ) {
-                setDimensions(attribute.options);
-            }
-        })
+        //If image product, get product and attached dimension attribute terms
+        if ( imageID !== 'null' ) {
+            const data = await fetch(
+                `${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${imageID}`
+            ).then((data) => data.json());
+            console.log(data);
+            setImage( { name: data.name, src: data.images[0].src, id: data.id, desc: data.short_description } );
+            data.attributes.map((attribute) => {
+                if ( attribute.name == 'Dimensions' ) {
+                    setDimensions(attribute.options);
+                }
+            })
+        //If custom image, get attached dimensions attribute terms
+        } else {
+            setImage( { name: null } );
+        }
     };
 
 
@@ -65,11 +71,8 @@ const GalleryApp = () => {
         setPassepartouts(passepartouts);
     };
 
-
     useEffect(() => {
-        if ( imageID !== null ) {
-            getImage();
-        }
+        getImage();
         getProducts();
     }, [] );
 
