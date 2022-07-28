@@ -14,12 +14,11 @@ const Product = ( props ) => {
         }
     }
 
-    let mediumPrice = setProduct( props.mediums, props.order.medium_id );
-    let framePrice = setProduct( props.frames, props.order.frame_id );
-    let passepartoutPrice = setProduct( props.passepartouts, props.order.passepartout_id );
+    let mediumPrice = setPrice( props.mediums, props.order.medium_id );
+    let framePrice = setPrice( props.frames, props.order.frame_id );
+    let passepartoutPrice = setPrice( props.passepartouts, props.order.passepartout_id );
 
     const total = props.order.image_price + mediumPrice + framePrice + passepartoutPrice;
-
 
     const addToCart = async () => {
         if ( props.order.image_id !== '' && props.order.medium_id !== ''

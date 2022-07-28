@@ -63,7 +63,6 @@ function photolab_apps_rest_cb() {
 
     $task = filter_var( $_GET['task'], FILTER_SANITIZE_STRING );
     $id   = filter_var( $_GET['id'], FILTER_VALIDATE_INT );
-    $attributes = filter_var( $_GET['attributes'] );
     $data = json_decode( $_POST['data'] );
     $file = $_FILES['file'];
 
@@ -83,6 +82,9 @@ function photolab_apps_rest_cb() {
             break;
         case 'categories':
             $query = $woocommerce->get( 'products/categories' );
+            break;
+        case 'attributes':
+            $query = get_terms( 'pa_dimensions' );
             break;
         case 'options':
             $args = new WC_Product_Query( array(

@@ -3568,8 +3568,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Image = props => {
+  const checkImageQuality = () => {
+    const image = document.getElementById('gallery-app-image');
+    const pixelWidth = image.naturalWidth;
+    const pixelHeight = image.naturalHeight;
+    const mmWidth = props.dimension;
+    const mmHeight = props.dimension;
+  };
+
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (props.dimension !== undefined) {
+      checkImageQuality();
+    }
+  }, [props.dimension]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: props.image.src
+    id: "gallery-app-image",
+    src: props.src
   }));
 };
 
@@ -3646,9 +3660,9 @@ const Product = props => {
     }
   };
 
-  let mediumPrice = setProduct(props.mediums, props.order.medium_id);
-  let framePrice = setProduct(props.frames, props.order.frame_id);
-  let passepartoutPrice = setProduct(props.passepartouts, props.order.passepartout_id);
+  let mediumPrice = setPrice(props.mediums, props.order.medium_id);
+  let framePrice = setPrice(props.frames, props.order.frame_id);
+  let passepartoutPrice = setPrice(props.passepartouts, props.order.passepartout_id);
   const total = props.order.image_price + mediumPrice + framePrice + passepartoutPrice;
 
   const addToCart = async () => {
@@ -3698,7 +3712,7 @@ const Workshop = props => {
   const [availableMediums, setAvailableMediums] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availableFrames, setAvailableFrames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [availablePassepartouts, setAvailablePassepartouts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
-  const [customImage, setCustomImage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
+  const [imageSrc, setImageSrc] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.image.src);
   const [loaded, setLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [order, setOrder] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
     dimension: selectedDimension,
@@ -3711,7 +3725,7 @@ const Workshop = props => {
 
   const setVariations = (type, objects, selectedDimension) => {
     var options = [];
-    var dimension = selectedDimension.replace(/[^0-9]/gi, '');
+    let dimension = selectedDimension.replace(/[^0-9]/gi, '');
 
     for (let object of objects) {
       for (let variation of object.variations) {
@@ -3737,6 +3751,8 @@ const Workshop = props => {
         setAvailablePassepartouts(options);
       }
     }
+
+    return;
   };
 
   const setDimension = dimension => {
@@ -3779,15 +3795,15 @@ const Workshop = props => {
       method: 'POST',
       body: image
     }).then(data => data.json());
-    setCustomImage(data);
+    setImageSrc(data);
     return;
   };
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-image"
-  }, props.image.id !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    image: props.image
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, props.image.id !== '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    src: imageSrc
+  }), props.image.id == '' && imageSrc === '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-upload-image"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
     class: "fa-solid fa-camera fa-4x"
@@ -3795,11 +3811,14 @@ const Workshop = props => {
     type: "file",
     id: "photolab-gallery-custom-image",
     onChange: CustomImage
-  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }))), props.image.id == '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    src: imageSrc,
+    dimension: selectedDimension
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-info"
   }, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title) : null, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, description) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-options"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "v\xE4lj storlek"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: event => setDimension(event.target.value),
