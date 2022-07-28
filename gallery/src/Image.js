@@ -4,9 +4,7 @@ const Image = ( props ) => {
 
   return (
       <>
-      <div className="gallery-app-image">
-          <img src={props.image.src}/>
-      </div>
+         <img src={props.image.src}/>
       </>
   );
 };

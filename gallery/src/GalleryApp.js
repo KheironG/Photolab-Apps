@@ -1,6 +1,6 @@
 import { react, useState, useEffect } from '@wordpress/element';
 
-import Details from "./Details";
+import Workshop from "./Workshop";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImages } from '@fortawesome/free-regular-svg-icons'
@@ -9,7 +9,6 @@ import "../../static/style.css";
 
 
 const GalleryApp = () => {
-
 
     const queryString = window.location.search;
     const urlParams   = new URLSearchParams(queryString);
@@ -21,6 +20,7 @@ const GalleryApp = () => {
     const [ mediums, setMediums ] = useState();
     const [ frames, setFrames ] = useState();
     const [ passepartouts, setPassepartouts ] = useState();
+    const [ loaded, setLoaded ] = useState();
 
     const getImage = async () => {
         //If image product, get product and attached dimension attribute terms
@@ -28,8 +28,7 @@ const GalleryApp = () => {
             const data = await fetch(
                 `${origin}/wp-json/photolab-app/v1/auth?task=get-image&id=${imageID}`
             ).then((data) => data.json());
-            console.log(data);
-            setImage( { name: data.name, src: data.images[0].src, id: data.id, desc: data.short_description } );
+            setImage( { title: data.name, src: data.images[0].src, id: data.id, desc: data.short_description } );
             data.attributes.map((attribute) => {
                 if ( attribute.name == 'Dimensions' ) {
                     setDimensions(attribute.options);
@@ -37,7 +36,15 @@ const GalleryApp = () => {
             })
         //If custom image, get attached dimensions attribute terms
         } else {
-            setImage( { name: null } );
+            const attributes = await fetch(
+                `${origin}/wp-json/photolab-app/v1/auth?task=attributes`
+            ).then((attributes) => attributes.json());
+            setImage( { title: 'egen bild', src: '', id: '', desc: '' } );
+            let dimensions = [];
+            for ( let dimension of attributes ) {
+                dimensions.push(dimension.slug);
+            }
+            setDimensions(dimensions);
         }
     };
 
@@ -81,7 +88,7 @@ const GalleryApp = () => {
         <div className="gallery-app-container">
             { image !== undefined && dimensions !== undefined && mediums !== undefined
               && frames !== undefined && passepartouts !== undefined ?
-                <Details image={image} dimensions={dimensions} mediums={mediums} frames={frames} passepartouts={passepartouts} />
+                <Workshop image={image} dimensions={dimensions} mediums={mediums} frames={frames} passepartouts={passepartouts} />
                 :
                 <p>loading workshop...</p>
             }
