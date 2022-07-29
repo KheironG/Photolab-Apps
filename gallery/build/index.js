@@ -3661,18 +3661,35 @@ __webpack_require__.r(__webpack_exports__);
 const Options = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Paper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: ""
-  }, props.mediums.map(function (option) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj papper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    onChange: event => props.setOrder(prevState => ({ ...prevState,
+      medium_id: parseInt(event.target.value)
+    })),
+    required: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Inte valt"), props.mediums.map(function (variation) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: option.id
-    }, option.name + option.price);
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Frame"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, props.frames.map(function (option) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj ram"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    onChange: event => props.setOrder(prevState => ({ ...prevState,
+      frame_id: parseInt(event.target.value)
+    }))
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen ram"), props.frames.map(function (variation) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: option.id
-    }, option.name, " ", 'kr' + option.price);
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "gallery-app-option"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Ingen passepartout"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    onChange: event => props.setOrder(prevState => ({ ...prevState,
+      passepartout_id: parseInt(event.target.value)
+    }))
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen passepartout"), props.passepartouts.map(function (variation) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      value: variation.id
+    }, variation.name, " ", 'kr' + variation.price);
   }))));
 };
 
@@ -3908,38 +3925,12 @@ const Workshop = props => {
     }, dimension);
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ImageQuality__WEBPACK_IMPORTED_MODULE_2__["default"], {
     dimension: selectedDimension
-  })), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj papper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    onChange: event => setOrder(prevState => ({ ...prevState,
-      medium_id: parseInt(event.target.value)
-    })),
-    required: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Inte valt"), availableMediums.map(function (variation) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.id
-    }, variation.name, " ", 'kr' + variation.price);
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj ram"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    onChange: event => setOrder(prevState => ({ ...prevState,
-      frame_id: parseInt(event.target.value)
-    }))
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen ram"), availableFrames.map(function (variation) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.id
-    }, variation.name, " ", 'kr' + variation.price);
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Ingen passepartout"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    onChange: event => setOrder(prevState => ({ ...prevState,
-      passepartout_id: parseInt(event.target.value)
-    }))
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Ingen passepartout"), availablePassepartouts.map(function (variation) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: variation.id
-    }, variation.name, " ", 'kr' + variation.price);
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Product__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  })), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Options__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    mediums: availableMediums,
+    frames: availableFrames,
+    passepartouts: availablePassepartouts,
+    setOrder: setOrder
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Product__WEBPACK_IMPORTED_MODULE_5__["default"], {
     mediums: availableMediums,
     frames: availableFrames,
     passepartouts: availablePassepartouts,

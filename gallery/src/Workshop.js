@@ -116,41 +116,11 @@ const Workshop = ( props ) => {
 
                     { loaded == true ?
                     <>
-                        <div className="gallery-app-option">
-                            <label>Välj papper</label>
-                            <select onChange={event => setOrder(prevState => ({...prevState, medium_id: parseInt(event.target.value) })) } required>
-                            <option>Inte valt</option>
-                                {availableMediums.map(function( variation ){
-                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
-                                })}
-                            </select>
-                        </div>
-                        <div className="gallery-app-option">
-                            <label>Välj ram</label>
-                            <select onChange={event => setOrder(prevState => ({...prevState, frame_id: parseInt(event.target.value) })) }  >
-                            <option>Ingen ram</option>
-                                {availableFrames.map(function( variation ){
-                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
-                                })}
-                            </select>
-                        </div>
-                        <div className="gallery-app-option">
-                            <label>Ingen passepartout</label>
-                            <select onChange={event => setOrder(prevState => ({...prevState, passepartout_id: parseInt(event.target.value) })) }  >
-                            <option>Ingen passepartout</option>
-                                {availablePassepartouts.map(function( variation ){
-                                    return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
-                                })}
-                            </select>
-                        </div>
-
+                        <Options mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} setOrder={setOrder} />
                         <Product mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order}/>
                     </>
-
                     :
-
                         null
-
                     }
                 </div>
             </div>
