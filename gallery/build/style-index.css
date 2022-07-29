@@ -204,7 +204,15 @@ a.select-product-button,
   border-radius: none;
 }
 
-.gallery-app-dpi-level {
+.gallery-app-image-quality {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  grid-gap: 10px;
+  margin-top: 10px;
+}
+.gallery-app-image-quality div {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -213,26 +221,26 @@ a.select-product-button,
   width: 200px;
   height: 20px;
 }
-.gallery-app-dpi-level span {
+.gallery-app-image-quality div span {
   height: 100%;
   width: 8px;
 }
-.gallery-app-dpi-level span:nth-child(-n+5):nth-child(n+0) {
+.gallery-app-image-quality div span:nth-child(-n+5):nth-child(n+0) {
   background-color: red;
 }
-.gallery-app-dpi-level span:nth-child(-n+10):nth-child(n+6) {
+.gallery-app-image-quality div span:nth-child(-n+10):nth-child(n+6) {
   background-color: orange;
 }
-.gallery-app-dpi-level span:nth-child(-n+15):nth-child(n+11) {
+.gallery-app-image-quality div span:nth-child(-n+15):nth-child(n+11) {
   background-color: yellow;
 }
-.gallery-app-dpi-level span:nth-child(-n+20):nth-child(n+16) {
+.gallery-app-image-quality div span:nth-child(-n+20):nth-child(n+16) {
   background-color: green;
 }
-.gallery-app-dpi-level span:nth-child(-n+5):nth-child(n+0) ~ span.inactive,
-.gallery-app-dpi-level span:nth-child(-n+10):nth-child(n+6) ~ span.inactive,
-.gallery-app-dpi-level span:nth-child(-n+15):nth-child(n+11) ~ span.inactive,
-.gallery-app-dpi-level span:nth-child(-n+20):nth-child(n+16) ~ span.inactive {
+.gallery-app-image-quality div span:nth-child(-n+5):nth-child(n+0) ~ span.inactive,
+.gallery-app-image-quality div span:nth-child(-n+10):nth-child(n+6) ~ span.inactive,
+.gallery-app-image-quality div span:nth-child(-n+15):nth-child(n+11) ~ span.inactive,
+.gallery-app-image-quality div span:nth-child(-n+20):nth-child(n+16) ~ span.inactive {
   background-color: #E3E3E3;
 }
 
@@ -269,6 +277,7 @@ a.select-product-button,
 }
 .gallery-app-container .gallery-app-image img {
   width: auto;
+  max-width: 600px;
   max-height: 600px;
 }
 @media (max-width: 950px) {

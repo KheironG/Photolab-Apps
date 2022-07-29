@@ -3568,41 +3568,77 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Image = props => {
-  const dimensions = props.dimension;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    id: "gallery-app-image",
+    src: props.src
+  });
+};
 
-  const setImageQuality = () => {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
+
+/***/ }),
+
+/***/ "./src/ImageQuality.js":
+/*!*****************************!*\
+  !*** ./src/ImageQuality.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+const ImageQuality = props => {
+  const dimensions = props.dimension;
+  const [imageQualityText, setImageQualityText] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
+
+  const setImageQualityLevel = () => {
     const image = document.getElementById('gallery-app-image');
     const pixelWidth = image.naturalWidth;
-    const pixelHeight = image.naturalHeight;
     const dimensions = props.dimension;
     const xSign = dimensions.search(/\D/);
     const mmWidth = dimensions.substr(0, xSign);
-    const mmHeight = dimensions.substr(xSign + 1, dimensions.length - 1);
     const dpiLevel = pixelWidth / (mmWidth / 2.54) / 20;
-    var levels = [];
+    var dpiLevels = [];
 
     for (var i = 0; i < 20; i++) {
       if (i < dpiLevel) {
-        levels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null));
+        dpiLevels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null));
       } else {
-        levels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+        dpiLevels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
           className: "inactive"
         }));
       }
     }
 
-    return levels;
-  };
+    return dpiLevels;
+  }; // let text =
+  // if ( dpiLevel < 5 ) {
+  //     setImageQualityText('dålig kvalitet');
+  // }
+  // if ( dpiLevel > 5 && dpiLevel < 10 ) {
+  //     setImageQualityText('ok kvalitet');
+  // }
+  // if ( dpiLevel > 10 && dpiLevel < 15 ) {
+  //     setImageQualityText('bra kvalitet');
+  // }
+  // if ( dpiLevel > 15 && dpiLevel < 20 ) {
+  //     setImageQualityText('optimal kvalitet');
+  // }
 
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    id: "gallery-app-image",
-    src: props.src
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "gallery-app-dpi-level"
-  }, dimensions !== undefined && setImageQuality()));
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "gallery-app-image-quality"
+  }, dimensions !== undefined && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, setImageQualityLevel()), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, imageQualityText)));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ImageQuality);
 
 /***/ }),
 
@@ -3696,6 +3732,50 @@ const Product = props => {
 
 /***/ }),
 
+/***/ "./src/Upload.js":
+/*!***********************!*\
+  !*** ./src/Upload.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+const Upload = props => {
+  const customImage = async () => {
+    const input = document.getElementById('photolab-gallery-custom-image');
+    let image = new FormData();
+    image.append('file', input.files[0]);
+    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
+      method: 'POST',
+      body: image
+    }).then(data => data.json());
+    props.setImageSrc(data);
+    return;
+  };
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "gallery-app-upload-image"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
+    class: "fa-solid fa-camera fa-4x"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "ladda upp")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "file",
+    id: "photolab-gallery-custom-image",
+    onChange: customImage
+  })));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Upload);
+
+/***/ }),
+
 /***/ "./src/Workshop.js":
 /*!*************************!*\
   !*** ./src/Workshop.js ***!
@@ -3710,8 +3790,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Image */ "./src/Image.js");
-/* harmony import */ var _Options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Options */ "./src/Options.js");
-/* harmony import */ var _Product__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Product */ "./src/Product.js");
+/* harmony import */ var _ImageQuality__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ImageQuality */ "./src/ImageQuality.js");
+/* harmony import */ var _Upload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Upload */ "./src/Upload.js");
+/* harmony import */ var _Options__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Options */ "./src/Options.js");
+/* harmony import */ var _Product__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Product */ "./src/Product.js");
+
+
 
 
 
@@ -3799,35 +3883,16 @@ const Workshop = props => {
       setLoaded(true);
     }
   }, [availableMediums, availableFrames, availablePassepartouts]);
-
-  const CustomImage = async () => {
-    const input = document.getElementById('photolab-gallery-custom-image');
-    let image = new FormData();
-    image.append('file', input.files[0]);
-    const data = await fetch(`${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
-      method: 'POST',
-      body: image
-    }).then(data => data.json());
-    setImageSrc(data);
-    return;
-  };
-
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-image"
   }, props.image.id !== '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
     src: imageSrc,
     dimension: selectedDimension
-  }), props.image.id == '' && imageSrc === '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "gallery-app-upload-image"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
-    class: "fa-solid fa-camera fa-4x"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "ladda upp")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "file",
-    id: "photolab-gallery-custom-image",
-    onChange: CustomImage
-  }))), props.image.id == '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  }), props.image.id === '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
     src: imageSrc,
     dimension: selectedDimension
+  }), props.image.id === '' && imageSrc === '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Upload__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    setImageSrc: setImageSrc
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-info"
   }, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title) : null, title !== '' ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, description) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3841,7 +3906,9 @@ const Workshop = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: dimension
     }, dimension);
-  }))), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ImageQuality__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    dimension: selectedDimension
+  })), loaded == true ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "V\xE4lj papper"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: event => setOrder(prevState => ({ ...prevState,
@@ -3872,7 +3939,7 @@ const Workshop = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: variation.id
     }, variation.name, " ", 'kr' + variation.price);
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Product__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Product__WEBPACK_IMPORTED_MODULE_5__["default"], {
     mediums: availableMediums,
     frames: availableFrames,
     passepartouts: availablePassepartouts,

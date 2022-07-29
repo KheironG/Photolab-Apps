@@ -1,6 +1,8 @@
 import { react, useState, useEffect } from '@wordpress/element';
 
 import Image from "./Image";
+import ImageQuality from "./ImageQuality";
+import Upload from "./Upload";
 import Options from "./Options";
 import Product from "./Product";
 
@@ -78,42 +80,20 @@ const Workshop = ( props ) => {
     }, [ availableMediums, availableFrames, availablePassepartouts ] );
 
 
-    const CustomImage = async () => {
-        const input = document.getElementById('photolab-gallery-custom-image');
-        let image = new FormData();
-        image.append('file', input.files[0]);
-
-        const data = await fetch(
-            `${origin}/wp-json/photolab-app/v1/auth?task=upload-image`, {
-              method: 'POST',
-              body: image,
-          }
-        ).then((data) => data.json());
-        setImageSrc(data);
-        return;
-    };
-
     return (
         <>
             <div className="gallery-app-image">
                 { ( props.image.id !== '' && imageSrc !== '' ) &&
                     <Image src={imageSrc} dimension={selectedDimension}/>
                 }
-                { ( props.image.id == '' && imageSrc === '' ) &&
-                    <div className="gallery-app-upload-image">
-                        <div>
-                            <label>
-                                <i class="fa-solid fa-camera fa-4x"></i>
-                                <h5>ladda upp</h5>
-                            </label>
-                            <input type="file" id="photolab-gallery-custom-image" onChange={CustomImage}/>
-                        </div>
-                    </div>
-                }
-                { ( props.image.id == '' && imageSrc !== '' ) &&
+                { ( props.image.id === '' && imageSrc !== '' ) &&
                     <Image src={imageSrc} dimension={selectedDimension}/>
                 }
+                { ( props.image.id === '' && imageSrc === '' ) &&
+                    <Upload setImageSrc={setImageSrc}/>
+                }
             </div>
+
             <div className="gallery-app-info">
 
                 {title !== '' ? <h2>{title}</h2>: null}
@@ -130,6 +110,7 @@ const Workshop = ( props ) => {
                                 return <option value={dimension}>{dimension}</option>;
                                 })}
                             </select>
+                            <ImageQuality dimension={selectedDimension} />
                         </div>
                     }
 

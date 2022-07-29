@@ -1,36 +1,42 @@
-.gallery-app-dpi-level {
-    @include flex-start-center;
-    column-gap: 1px;
-    width: 200px;
-    height: 20px;
+.gallery-app-image-quality {
+    @include flex-start-column;
+    grid-gap: 10px;
+    margin-top: 10px;
 
-    span {
-        height: 100%;
-        width: 8px;
+    div {
+        @include flex-start-center;
+        column-gap: 1px;
+        width: 200px;
+        height: 20px;
+
+        span {
+            height: 100%;
+            width: 8px;
+        }
+
+        span:nth-child(-n+5):nth-child(n+0) {
+            background-color: red;
+        }
+
+        span:nth-child(-n+10):nth-child(n+6) {
+            background-color: orange;
+        }
+
+        span:nth-child(-n+15):nth-child(n+11) {
+            background-color: yellow;
+        }
+
+        span:nth-child(-n+20):nth-child(n+16) {
+            background-color: green;
+        }
+
+        span:nth-child(-n+5):nth-child(n+0) ~ span.inactive,
+        span:nth-child(-n+10):nth-child(n+6) ~ span.inactive,
+        span:nth-child(-n+15):nth-child(n+11) ~ span.inactive,
+        span:nth-child(-n+20):nth-child(n+16) ~ span.inactive {
+            background-color: $grey-2;
+        }
+
     }
-
-    span:nth-child(-n+5):nth-child(n+0) {
-        background-color: red;
-    }
-
-    span:nth-child(-n+10):nth-child(n+6) {
-        background-color: orange;
-    }
-
-    span:nth-child(-n+15):nth-child(n+11) {
-        background-color: yellow;
-    }
-
-    span:nth-child(-n+20):nth-child(n+16) {
-        background-color: green;
-    }
-
-    span:nth-child(-n+5):nth-child(n+0) ~ span.inactive,
-    span:nth-child(-n+10):nth-child(n+6) ~ span.inactive,
-    span:nth-child(-n+15):nth-child(n+11) ~ span.inactive,
-    span:nth-child(-n+20):nth-child(n+16) ~ span.inactive {
-        background-color: $grey-2;
-    }
-
 
 }
