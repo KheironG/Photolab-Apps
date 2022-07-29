@@ -233,6 +233,45 @@ a.select-product-button,
   border-radius: none;
 }
 
+.gallery-app-dpi-level {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-column-gap: 1px;
+     -moz-column-gap: 1px;
+          column-gap: 1px;
+  width: 200px;
+  height: 20px;
+}
+.gallery-app-dpi-level span {
+  height: 100%;
+  width: 8px;
+}
+.gallery-app-dpi-level span:nth-child(-n+5):nth-child(n+0) {
+  background-color: red;
+}
+.gallery-app-dpi-level span:nth-child(-n+10):nth-child(n+6) {
+  background-color: orange;
+}
+.gallery-app-dpi-level span:nth-child(-n+15):nth-child(n+11) {
+  background-color: yellow;
+}
+.gallery-app-dpi-level span:nth-child(-n+20):nth-child(n+16) {
+  background-color: green;
+}
+.gallery-app-dpi-level span:nth-child(-n+5):nth-child(n+0) ~ span.inactive,
+.gallery-app-dpi-level span:nth-child(-n+10):nth-child(n+6) ~ span.inactive,
+.gallery-app-dpi-level span:nth-child(-n+15):nth-child(n+11) ~ span.inactive,
+.gallery-app-dpi-level span:nth-child(-n+20):nth-child(n+16) ~ span.inactive {
+  background-color: #E3E3E3;
+}
+
 .gallery-app-container {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -97,7 +97,7 @@ const Workshop = ( props ) => {
         <>
             <div className="gallery-app-image">
                 { ( props.image.id !== '' && imageSrc !== '' ) &&
-                    <Image src={imageSrc}/>
+                    <Image src={imageSrc} dimension={selectedDimension}/>
                 }
                 { ( props.image.id == '' && imageSrc === '' ) &&
                     <div className="gallery-app-upload-image">
@@ -118,7 +118,7 @@ const Workshop = ( props ) => {
 
                 {title !== '' ? <h2>{title}</h2>: null}
                 {title !== '' ? <p>{description}</p>: null}
-                
+
                 <div className="gallery-app-options">
 
                     { imageSrc !== '' &&

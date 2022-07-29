@@ -3568,23 +3568,38 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Image = props => {
-  const checkImageQuality = () => {
+  const dimensions = props.dimension;
+
+  const setImageQuality = () => {
     const image = document.getElementById('gallery-app-image');
     const pixelWidth = image.naturalWidth;
     const pixelHeight = image.naturalHeight;
-    const mmWidth = props.dimension;
-    const mmHeight = props.dimension;
+    const dimensions = props.dimension;
+    const xSign = dimensions.search(/\D/);
+    const mmWidth = dimensions.substr(0, xSign);
+    const mmHeight = dimensions.substr(xSign + 1, dimensions.length - 1);
+    const dpiLevel = pixelWidth / (mmWidth / 2.54) / 20;
+    var levels = [];
+
+    for (var i = 0; i < 20; i++) {
+      if (i < dpiLevel) {
+        levels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null));
+      } else {
+        levels.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+          className: "inactive"
+        }));
+      }
+    }
+
+    return levels;
   };
 
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (props.dimension !== undefined) {
-      checkImageQuality();
-    }
-  }, [props.dimension]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
     id: "gallery-app-image",
     src: props.src
-  }));
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "gallery-app-dpi-level"
+  }, dimensions !== undefined && setImageQuality()));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
@@ -3618,9 +3633,7 @@ const Options = props => {
     }, option.name + option.price);
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-option"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Frame"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-    name: ""
-  }, props.frames.map(function (option) {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Select Frame"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, props.frames.map(function (option) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: option.id
     }, option.name, " ", 'kr' + option.price);
@@ -3802,7 +3815,8 @@ const Workshop = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-image"
   }, props.image.id !== '' && imageSrc !== '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Image__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    src: imageSrc
+    src: imageSrc,
+    dimension: selectedDimension
   }), props.image.id == '' && imageSrc === '' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-upload-image"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", {
