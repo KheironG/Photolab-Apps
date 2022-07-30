@@ -3595,16 +3595,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const ImageQuality = props => {
-  const dimensions = props.dimension;
-  const [imageQualityText, setImageQualityText] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
+  const [dpiLevel, setDpiLevel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)();
 
-  const setImageQualityLevel = () => {
-    const image = document.getElementById('gallery-app-image');
-    const pixelWidth = image.naturalWidth;
-    const dimensions = props.dimension;
-    const xSign = dimensions.search(/\D/);
-    const mmWidth = dimensions.substr(0, xSign);
-    const dpiLevel = pixelWidth / (mmWidth / 2.54) / 20;
+  const setImageQualityLevel = dpiLevel => {
     var dpiLevels = [];
 
     for (var i = 0; i < 20; i++) {
@@ -3618,24 +3611,44 @@ const ImageQuality = props => {
     }
 
     return dpiLevels;
-  }; // let text =
-  // if ( dpiLevel < 5 ) {
-  //     setImageQualityText('dålig kvalitet');
-  // }
-  // if ( dpiLevel > 5 && dpiLevel < 10 ) {
-  //     setImageQualityText('ok kvalitet');
-  // }
-  // if ( dpiLevel > 10 && dpiLevel < 15 ) {
-  //     setImageQualityText('bra kvalitet');
-  // }
-  // if ( dpiLevel > 15 && dpiLevel < 20 ) {
-  //     setImageQualityText('optimal kvalitet');
-  // }
+  };
 
+  const setImageQualityText = dpiLevel => {
+    let text;
 
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    if (dpiLevel < 5) {
+      text = 'dålig kvalitet';
+    }
+
+    if (dpiLevel > 5 && dpiLevel < 10) {
+      text = 'ok kvalitet';
+    }
+
+    if (dpiLevel > 10 && dpiLevel < 15) {
+      text = 'bra kvalitet';
+    }
+
+    if (dpiLevel > 15 && dpiLevel < 20) {
+      text = 'optimal kvalitet';
+    }
+
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, text);
+  };
+
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (props.dimension !== undefined) {
+      const image = document.getElementById('gallery-app-image');
+      const pixelWidth = image.naturalWidth;
+      const dimensions = props.dimension;
+      const xSign = dimensions.search(/\D/);
+      const mmWidth = dimensions.substr(0, xSign);
+      const dpiLevel = pixelWidth / (mmWidth / 2.54) / 20;
+      setDpiLevel(dpiLevel);
+    }
+  }, [props.dimension]);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.dimension !== undefined && dpiLevel !== undefined && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "gallery-app-image-quality"
-  }, dimensions !== undefined && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, setImageQualityLevel()), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, imageQualityText)));
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, setImageQualityLevel(dpiLevel)), setImageQualityText(dpiLevel)));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ImageQuality);

@@ -90,17 +90,13 @@ const Workshop = ( props ) => {
                     <Image src={imageSrc} dimension={selectedDimension}/>
                 }
                 { ( props.image.id === '' && imageSrc === '' ) &&
-                    <Upload setImageSrc={setImageSrc}/>
+                    <Upload setImageSrc={setImageSrc} />
                 }
             </div>
-
             <div className="gallery-app-info">
-
                 {title !== '' ? <h2>{title}</h2>: null}
                 {title !== '' ? <p>{description}</p>: null}
-
                 <div className="gallery-app-options">
-
                     { imageSrc !== '' &&
                         <div className="gallery-app-option">
                             <label>välj storlek</label>
@@ -113,11 +109,10 @@ const Workshop = ( props ) => {
                             <ImageQuality dimension={selectedDimension} />
                         </div>
                     }
-
                     { loaded == true ?
                     <>
                         <Options mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} setOrder={setOrder} />
-                        <Product mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order}/>
+                        <Product mediums={availableMediums} frames={availableFrames} passepartouts={availablePassepartouts} order={order} />
                     </>
                     :
                         null
