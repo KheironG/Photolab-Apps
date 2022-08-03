@@ -1,13 +1,13 @@
 .gallery-app-image-quality {
     @include flex-center-column;
     margin-top: 10px;
-    width: 169px;
+    grid-gap: 4px;
+    width: 200px;
     text-align: center;
 
     div {
         @include flex-start-center;
         column-gap: 1px;
-        width: 100%;
         height: 20px;
 
         span {

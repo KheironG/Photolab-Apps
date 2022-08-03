@@ -2,7 +2,7 @@ import { react, useState, useEffect } from '@wordpress/element';
 
 const ImageQuality = ( props ) => {
 
-    const [ dpiLevel, setDpiLevel ] = useState();
+    const [ imageMeta, setImageMeta ] = useState();
 
     const setImageQualityLevel = ( dpiLevel ) => {
         var dpiLevels = [];
@@ -17,12 +17,8 @@ const ImageQuality = ( props ) => {
     }
 
 
-    const setImageQualityText = ( dpiLevel ) => {
-        let text;
-        if ( dpiLevel < 5 ) { text = 'dålig kvalitet'; }
-        if ( dpiLevel > 5 && dpiLevel < 10 ) { text = 'ok kvalitet'; }
-        if ( dpiLevel > 10 && dpiLevel < 15 ) { text = 'bra kvalitet'; }
-        if ( dpiLevel > 15 && dpiLevel < 20 ) { text = 'optimal kvalitet'; }
+    const setImageQualityText = ( imageMeta ) => {
+        let text = imageMeta.width + '×' + imageMeta.height + 'pixlar / ' + Math.round( imageMeta.dpi ) + ' dpi';
         return( <label>{text}</label>);
     }
 
@@ -31,23 +27,26 @@ const ImageQuality = ( props ) => {
         if ( props.dimension !== undefined ) {
             const image = document.getElementById('gallery-app-image');
             const pixelWidth = image.naturalWidth;
+            const pixelHeight = image.naturalHeight;
             const dimensions = props.dimension;
             const xSign = dimensions.search(/\D/);
             const mmWidth = dimensions.substr( 0, xSign );
-            const dpiLevel = ( pixelWidth / ( mmWidth / 2.54 ) / 20  );
-            setDpiLevel(dpiLevel);
+            const dpi = pixelWidth / ( mmWidth / 2.54 );
+            const dpiLevel = ( dpi / 20  );
+            setImageMeta( { width: pixelWidth, height: pixelHeight, dpi: dpi, dpiLevel: dpiLevel } );
         }
     }, [props.dimension] );
 
 
     return (
       <>
-      { ( props.dimension !== undefined && dpiLevel !== undefined ) &&
+      { ( props.dimension !== undefined && imageMeta !== undefined ) &&
          <div className='gallery-app-image-quality'>
+                <label>kvalitet på utskrift</label>
             <div>
-                { setImageQualityLevel(dpiLevel) }
+                { setImageQualityLevel(imageMeta.dpiLevel) }
             </div>
-                { setImageQualityText(dpiLevel) }
+                { setImageQualityText(imageMeta) }
         </div>
      }
      </>

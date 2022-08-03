@@ -7,7 +7,7 @@ const Options = ( props ) => {
           <div className="gallery-app-option">
               <label>Välj papper</label>
               <select onChange={event => props.setOrder(prevState => ( {...prevState, medium_id: parseInt(event.target.value) } )) } required>
-              <option>Inte valt</option>
+              <option value="0">Inte valt</option>
                   {props.mediums.map(function( variation ){
                       return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                   })}
@@ -16,7 +16,7 @@ const Options = ( props ) => {
           <div className="gallery-app-option">
               <label>Välj ram</label>
               <select onChange={event => props.setOrder(prevState => ( {...prevState, frame_id: parseInt(event.target.value) } )) }  >
-              <option>Ingen ram</option>
+              <option value="0">Ingen ram</option>
                   {props.frames.map(function( variation ){
                       return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                   })}
@@ -25,7 +25,7 @@ const Options = ( props ) => {
           <div className="gallery-app-option">
               <label>Ingen passepartout</label>
               <select onChange={event => props.setOrder(prevState => ( {...prevState, passepartout_id: parseInt(event.target.value) } )) }  >
-              <option>Ingen passepartout</option>
+              <option value="0">Ingen passepartout</option>
                   {props.passepartouts.map(function( variation ){
                       return <option value={variation.id}>{variation.name} {'kr' + variation.price}</option>;
                   })}
