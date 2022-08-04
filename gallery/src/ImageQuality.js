@@ -24,23 +24,18 @@ const ImageQuality = ( props ) => {
 
 
     useEffect(() => {
-        if ( props.dimension !== undefined ) {
-            const image = document.getElementById('gallery-app-image');
-            const pixelWidth = image.naturalWidth;
-            const pixelHeight = image.naturalHeight;
-            const dimensions = props.dimension;
-            const xSign = dimensions.search(/\D/);
-            const mmWidth = dimensions.substr( 0, xSign );
-            const dpi = pixelWidth / ( mmWidth / 2.54 );
-            const dpiLevel = ( dpi / 20  );
-            setImageMeta( { width: pixelWidth, height: pixelHeight, dpi: dpi, dpiLevel: dpiLevel } );
-        }
+        const dimensions = props.dimension;
+        const xSign = dimensions.search(/\D/);
+        const mmWidth = dimensions.substr( 0, xSign );
+        const dpi = props.width / ( mmWidth / 2.54 );
+        const dpiLevel = ( dpi / 20  );
+        setImageMeta( { width: props.width, height: props.height, dpi: dpi, dpiLevel: dpiLevel } );
     }, [props.dimension] );
 
 
     return (
       <>
-      { ( props.dimension !== undefined && imageMeta !== undefined ) &&
+      { imageMeta !== undefined &&
          <div className='gallery-app-image-quality'>
                 <label>kvalitet på utskrift</label>
             <div>
